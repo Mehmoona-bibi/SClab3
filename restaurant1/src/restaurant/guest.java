@@ -5,6 +5,8 @@
  */
 package restaurant;
 
+import java.util.Hashtable;
+
 /**
  *
  * @author mehmoona
@@ -12,11 +14,15 @@ package restaurant;
 
 ///////guests
 public class guest {
+    
     private int id;
     private int table;
     private int items;
     private int people;
     private float serve_time;
+    private float start_time;
+    public float total_time =60;
+    public int allotime=0;
     private guest next;
     
     public guest(int id,int items, int people){
@@ -39,6 +45,14 @@ public class guest {
     
     public int getId(){
       return id;
+    }
+    
+    public void settabletime(float i){
+      start_time =i;
+    }
+    
+    public float gettabletime(){
+      return start_time;
     }
     
     public void setTime(float time){

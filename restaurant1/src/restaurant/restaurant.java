@@ -5,11 +5,17 @@
  */
 package restaurant;
 
+import java.util.Hashtable;
+
+
 /**
  *
  * @author mehmoona
  */
+
+// default time is one hour/60 mins
 public class restaurant {
+    Hashtable<Integer, int[]> t= new Hashtable();
     public int[] chef={1,1,1,1}; // 4 chefs
     long[] startTime={0,0,0,0}; //time for each chef
     public int servers=6; // 6 servers
@@ -22,8 +28,11 @@ public class restaurant {
     int guests=0; // number of guests
     guest head=null; //head of list
     
+    
+    
     //-------------adding guests to list------------
-    public void serving(int items,int people){
+    public void serving(int items,int people, float time,int allocate_time){
+        list();
         if(head==null){
             head=new guest(guests,items,people);
         }else{
@@ -37,7 +46,14 @@ public class restaurant {
                     cur=cur.getNext();
                 }
                 cur.setNext(temp);
-                cur.setTable(allocate_table(people));
+                cur.setTable(allocate_table(people,time));
+                if(cur.getTable()==0){
+                    cur.total_time=time;
+                }else{
+                    cur.total_time=60;
+                }
+                
+                cur.settabletime(System.currentTimeMillis());
                 cur.setTime(serving_time(items));
             }
         }           
@@ -73,7 +89,7 @@ public class restaurant {
         for(int i=0;i<4;i++){
             if(chef[i]!=0){ // if chef is not available
                 // checking the time required for thr the chef to complete previous order
-                //time is assumed in milliseconds
+                //time is assumed in 1 milliseconds == 1 minute 
                long remain= System.currentTimeMillis()- startTime[i]; 
                if(remain >30){
                    chef[i]=0;
@@ -99,20 +115,22 @@ public class restaurant {
     }   
     
     //--------allocation of table-----------
-    public int allocate_table(int persons){
+    public int allocate_table(int persons,float time){
         int t=-1; // no table at the moment
-        if(persons<=2){ // if persons less than or equal to 2
-            t=allocate(3);
+        if(persons<=2 && table[3]>0){ // if persons less than or equal to 2
+            t=allocate(3,time);
         }else{
-            if(persons<=4){ // if persons less than or equal to 4
+            if(persons<=4 && table[2]>0){ // if persons less than or equal to 4
                 
-           t=allocate(2);
+           t=allocate(2,time);
             }else{
-                if(persons<=6){ // if persons less than or equal to 6
-                    t=allocate(1);
+                if(persons<=6 && table[1]>0){ // if persons less than or equal to 6
+                    t=allocate(1,time);
                 }else{
-                    if(persons<=12){ // if persons less than or equal to 12
-                        t=allocate(0);
+                    if(persons<=12 && table[0]>0){ // if persons less than or equal to 12
+                        t=allocate(0,time);
+                    }else{
+                        System.out.print("No table available \n"); 
                     }
                 }
             }
@@ -120,13 +138,18 @@ public class restaurant {
         return t;
     }
     //allocation of table
-    public int allocate(int i){
+    public int allocate(int i,float t){
         int assign =0;
         int j;
         for(j=i;j>=0;j--){
             if(table[j]>0){
                 table[j]--;
-                System.out.print("Table "+j+" is assigned to you\n");
+                
+                if(j==0){
+                System.out.print("Table "+j+" is assigned to you and time is "+t+" min\n");
+                }else{
+                    System.out.print("Table "+j+" is assigned to you and time is 60 min only\n");
+                }
                 assign=1;
                 
                 break;
@@ -137,5 +160,21 @@ public class restaurant {
             j=-1;
         }
         return j;
+    }
+    
+    //add list
+    public void list(){
+        t.put(11,table);
+        t.put(12,table);
+        t.put(1,table);
+        t.put(2,table);
+        t.put(3,table);
+        t.put(4,table);
+        t.put(5,table);
+        t.put(6,table);
+        t.put(7,table);
+        t.put(8,table);
+        t.put(9,table);
+        t.put(10,table);
     }
 }

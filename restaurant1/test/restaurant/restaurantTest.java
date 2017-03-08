@@ -34,10 +34,11 @@ public class restaurantTest extends TestCase {
         int persons = 8;
         restaurant instance = new restaurant();
         int expResult = 0;
-        int result = instance.allocate_table(persons);
+        int result = instance.allocate_table(persons,60);
         assertEquals(expResult, result);
         
     }
 
+   
     
 }
